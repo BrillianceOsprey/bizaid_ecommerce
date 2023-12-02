@@ -35,7 +35,7 @@ class FirstCategory extends Equatable {
 
 @JsonSerializable()
 class SecondLevelCategory extends Equatable {
-  SecondLevelCategory({
+  const SecondLevelCategory({
     required this.itemCategoryId,
     required this.itemCategoryName,
     required this.divisionId,
@@ -70,7 +70,7 @@ class SecondLevelCategory extends Equatable {
 
 @JsonSerializable()
 class ThirdLevelCategory extends Equatable {
-  ThirdLevelCategory({
+  const ThirdLevelCategory({
     required this.productCategoryId,
     required this.productCategoryName,
     required this.itemCategoryId,

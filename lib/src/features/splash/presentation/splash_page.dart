@@ -1,3 +1,5 @@
+// ignore_for_file: inference_failure_on_instance_creation, use_colored_box
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

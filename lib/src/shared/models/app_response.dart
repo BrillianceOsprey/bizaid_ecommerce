@@ -1,21 +1,13 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:starter_app/src/shared/errors/exceptions.dart';
+
 part 'app_response.g.dart';
 
 @JsonSerializable(explicitToJson: true, genericArgumentFactories: true)
 class AppResponse<T> extends Equatable {
-  const AppResponse._({
-    required this.success,
-    required this.message,
-    this.errors,
-    this.data,
-  });
-
   factory AppResponse({
-    String? success,
     required String message,
+    String? success,
     List<Map<String, dynamic>>? errors,
     T? data,
   }) =>
@@ -25,9 +17,17 @@ class AppResponse<T> extends Equatable {
         errors: errors,
         data: data,
       );
+  const AppResponse._({
+    required this.success,
+    required this.message,
+    this.errors,
+    this.data,
+  });
 
   factory AppResponse.fromJson(
-          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+    Map<String, dynamic> json,
+    T Function(Object? json) fromJsonT,
+  ) =>
       _$AppResponseFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(

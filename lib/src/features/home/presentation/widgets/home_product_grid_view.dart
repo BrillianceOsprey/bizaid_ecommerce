@@ -1,7 +1,8 @@
+// ignore_for_file: inference_failure_on_instance_creation, lines_longer_than_80_chars
+
 import 'package:flutter/material.dart';
 import 'package:starter_app/src/features/product/presentation/product_detail_page.dart';
 import 'package:starter_app/src/shared/utils/extensions/media_query_extension.dart';
-import 'package:starter_app/src/shared/utils/flutter_extension.dart';
 
 class HomeProductGridView extends StatelessWidget {
   const HomeProductGridView({

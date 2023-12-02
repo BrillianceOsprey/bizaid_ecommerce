@@ -21,7 +21,8 @@ class _CategoryPageState extends ConsumerState<CategoryPage> {
           return ListTile(
             title: const Text('category.productCategoryName'),
             leading: Image.network(
-                'http://13.228.29.1/productAllImage/SHATDX003.jpg'),
+              'http://13.228.29.1/productAllImage/SHATDX003.jpg',
+            ),
             onTap: () {},
           );
         },

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:starter_app/src/features/cart/domain/cart.dart';
-import 'package:starter_app/src/features/product/domain/product.dart';
 import 'package:starter_app/src/shared/constants/app_size.dart';
 
 class CartDetailPage extends StatefulHookConsumerWidget {
@@ -52,7 +50,9 @@ class _CartDetailPageState extends ConsumerState<CartDetailPage> {
         title: const Text('Cart Detail'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(
+          Sizes.p16,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -62,21 +62,26 @@ class _CartDetailPageState extends ConsumerState<CartDetailPage> {
               width: double.infinity,
               fit: BoxFit.cover,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(
+              height: Sizes.p16,
+            ),
             const Text(
               'product.productName',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 8),
+            gapH8,
             const Text('ERP Code: 44444'),
-            const SizedBox(height: 8),
+            gapH8,
             const Text('Price: 5456464'),
-            const SizedBox(height: 8),
+            gapH8,
             const Text('Quantity: 433'),
             gapH12,
             Row(
               children: [
-                Text('Quantity: '),
+                const Text('Quantity: '),
                 SizedBox(
                   width: 50,
                   child: TextField(
@@ -84,16 +89,16 @@ class _CartDetailPageState extends ConsumerState<CartDetailPage> {
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                SizedBox(width: 16),
+                gapH16,
                 ElevatedButton(
                   onPressed: () {
-                    int newQuantity =
+                    final newQuantity =
                         int.tryParse(quantityController.text) ?? 0;
                     setState(() {
                       // widget.product.quantity = newQuantity;
                     });
                   },
-                  child: Text('Update Quantity'),
+                  child: const Text('Update Quantity'),
                 ),
               ],
             ),

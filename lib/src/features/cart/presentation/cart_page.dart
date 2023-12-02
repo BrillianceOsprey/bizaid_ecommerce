@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:starter_app/src/features/cart/presentation/cart_detail_page.dart';
 import 'package:starter_app/src/shared/constants/app_size.dart';
-import 'package:starter_app/src/shared/utils/extensions/media_query_extension.dart';
 import 'package:starter_app/src/shared/utils/flutter_extension.dart';
 
 class CartPage extends ConsumerStatefulWidget {
@@ -38,6 +37,7 @@ class CartPageState extends ConsumerState<CartPage> {
           return InkWell(
             onTap: () {
               Navigator.of(context).push(
+                // ignore: inference_failure_on_instance_creation
                 MaterialPageRoute(
                   builder: (context) => const CartDetailPage(),
                 ),
@@ -108,7 +108,8 @@ class CartPageState extends ConsumerState<CartPage> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 2),
+                                      horizontal: 2,
+                                    ),
                                     child: Container(
                                       height: 30,
                                       width: 30,
@@ -127,10 +128,10 @@ class CartPageState extends ConsumerState<CartPage> {
                                 ],
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

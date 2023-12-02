@@ -70,6 +70,7 @@ class HomePageState extends ConsumerState<HomePage> {
                     itemBuilder: (context, index) => InkWell(
                       onTap: () {
                         Navigator.of(context).push(
+                          // ignore: inference_failure_on_instance_creation
                           MaterialPageRoute(
                             builder: (context) => const CategoryPage(),
                           ),

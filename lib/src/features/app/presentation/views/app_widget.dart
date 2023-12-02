@@ -1,9 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:starter_app/src/features/app/presentation/views/skeleton_page.dart';
 import 'package:starter_app/src/routes/app_router.dart';
 import 'package:starter_app/src/routes/app_router_observer.dart';
 import 'package:starter_app/src/shared/theme/app_theme.dart';

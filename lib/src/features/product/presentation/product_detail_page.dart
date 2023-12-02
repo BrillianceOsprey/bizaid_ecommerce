@@ -1,17 +1,25 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:starter_app/src/shared/constants/app_size.dart';
 
 @RoutePage()
 class ProductDatailPage extends StatefulHookConsumerWidget {
+  const ProductDatailPage(
+    this.productCode,
+    this.erpCode,
+    this.productName,
+    this.price,
+    this.imageUrl, {
+    super.key,
+  });
   final String productCode;
   final String erpCode;
   final String productName;
   final String price;
   final String imageUrl;
-  const ProductDatailPage(this.productCode, this.erpCode, this.productName,
-      this.price, this.imageUrl,
-      {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -19,7 +27,7 @@ class ProductDatailPage extends StatefulHookConsumerWidget {
 }
 
 class _ProductDatailPageState extends ConsumerState<ProductDatailPage> {
-   List<String> productList = [
+  List<String> productList = [
     'Item 1',
     'Item 2',
     'Item 3',
@@ -32,7 +40,7 @@ class _ProductDatailPageState extends ConsumerState<ProductDatailPage> {
         title: const Text('Product Detail'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,13 +55,13 @@ class _ProductDatailPageState extends ConsumerState<ProductDatailPage> {
               widget.productName,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+            gapH8,
             Text('ERP Code: ${widget.erpCode}'),
-            const SizedBox(height: 8),
+            gapH8,
             Text('Price: ${widget.price}'),
             const SizedBox(height: 16),
             // Add more details or components as needed
-            SizedBox(height: 8),
+            gapH8,
             Expanded(
               child: ListView.builder(
                 itemCount: productList.length,

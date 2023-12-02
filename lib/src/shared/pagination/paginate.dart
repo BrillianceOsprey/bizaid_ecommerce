@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_bool_literals_in_conditional_expressions
+
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,8 +20,6 @@ part 'paginate.g.dart';
   createToJson: false,
 )
 class PaginatedResponse<T> extends Equatable {
-  static const int defaultItemPerPage = 10;
-
   const PaginatedResponse({
     required this.totalCount,
     required this.page,
@@ -35,6 +35,7 @@ class PaginatedResponse<T> extends Equatable {
     T Function(Object?) fromJsonT,
   ) =>
       _$PaginatedResponseFromJson(json, fromJsonT);
+  static const int defaultItemPerPage = 10;
 
   /// Total data length.
   @JsonKey(name: 'total_count', defaultValue: 0)

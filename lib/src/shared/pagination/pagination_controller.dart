@@ -1,6 +1,8 @@
+// ignore_for_file: comment_references
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'paginate.dart';
+import 'package:starter_app/src/shared/pagination/paginate.dart';
 
 /// This controller will provide methods to handle pagination logic and
 /// can be mixed into Riverpod notifiers where pagination is required.

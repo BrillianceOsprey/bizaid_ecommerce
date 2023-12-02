@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_breaks
+// ignore_for_file: lines_longer_than_80_chars, inference_failure_on_function_invocation, unnecessary_breaks, duplicate_ignore
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dynamic_color/dynamic_color.dart';

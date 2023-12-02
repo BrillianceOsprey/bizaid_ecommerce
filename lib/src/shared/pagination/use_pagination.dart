@@ -16,10 +16,13 @@ ScrollController usePagination(
     }
   }
 
-  useEffect(() {
-    scrollController.addListener(scrollListener);
-    return null;
-  }, [scrollController]);
+  useEffect(
+    () {
+      scrollController.addListener(scrollListener);
+      return null;
+    },
+    [scrollController],
+  );
 
   return scrollController;
 }

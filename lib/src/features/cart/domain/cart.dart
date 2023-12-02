@@ -8,8 +8,14 @@ part 'cart.g.dart';
 
 @JsonSerializable()
 class Cart extends Equatable {
-  Cart(this.id, this.productCode, this.quantity, this.variantId, this.product,
-      this.variant);
+  const Cart(
+    this.id,
+    this.productCode,
+    this.quantity,
+    this.variantId,
+    this.product,
+    this.variant,
+  );
 
   final int id;
   final String productCode;
