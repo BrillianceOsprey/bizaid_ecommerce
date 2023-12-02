@@ -1,24 +1,29 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:starter_app/src/shared/errors/exceptions.dart';
 
 part 'app_response.g.dart';
 
 @JsonSerializable(explicitToJson: true, genericArgumentFactories: true)
 class AppResponse<T> extends Equatable {
   factory AppResponse({
+    required String status,
+    required int statusCode,
     required String message,
-    String? success,
     List<Map<String, dynamic>>? errors,
     T? data,
   }) =>
       AppResponse._(
-        success: success ?? 'success',
+        status: status,
+        statusCode: statusCode,
         message: message,
         errors: errors,
         data: data,
       );
   const AppResponse._({
-    required this.success,
+    required this.status,
+    required this.statusCode,
     required this.message,
     this.errors,
     this.data,
@@ -35,33 +40,59 @@ class AppResponse<T> extends Equatable {
   ) =>
       _$AppResponseToJson(this, toJsonT);
 
-  /// The boolean indicates the [AppResponse] is success or failed
-  final String success;
+  final String status;
 
-  /// The message of [AppResponse]
-  /// * can be array or string
+  final int statusCode;
   final String message;
 
-  /// Errors stacktrace from server.
-  ///
-  /// ```json
-  /// errors: [
-  ///  {
-  ///       type: "field",
-  ///       value: "mmmm",
-  ///       msg: "Password should be at least 7 chars long",
-  ///       path: "password",
-  ///       location: "body"
-  ///  }
-  /// ```
   final List<Map<String, dynamic>>? errors;
 
-  /// The [AppResponse] data
   final T? data;
 
   @override
-  List<Object?> get props => [success, message, data ?? ''];
+  List<Object?> get props => [status, message, data ?? ''];
 
   @override
   bool? get stringify => true;
+}
+
+typedef FromJsonCallback<M> = M Function(Map<String, dynamic>);
+Future<AppResponse<List<T>>> computeAppResponseList<T>(
+  dynamic data,
+  FromJsonCallback<T> fromJson,
+) async {
+  return compute(
+    (dynamic message) => AppResponse<List<T>>.fromJson(
+      message as Map<String, dynamic>,
+      (json) {
+        // message['isSuccess'] && json != null ? fromJson(json) : null,
+        // if (!message['isSuccess']) return [];
+        if (json == null) return [];
+        final data = (json as List<dynamic>)
+            .map((e) => fromJson(e as Map<String, dynamic>))
+            .toList();
+        return data;
+      },
+    ),
+    data,
+  );
+}
+
+extension AppResponseX<T> on AppResponse<T> {
+  /// Extension function to throw exception if error occurred.
+  AppResponse<T> throwIfError() {
+    if (status == 'success') {
+      return this;
+    } else if (errors != null && errors!.isNotEmpty) {
+      throw ServerException(
+        statusCode: statusCode.toString(),
+        message: errors!.map((e) => '${e['msg']}').toList().join('\n'),
+      );
+    } else {
+      throw ServerException(
+        statusCode: statusCode.toString(),
+        message: message,
+      );
+    }
+  }
 }

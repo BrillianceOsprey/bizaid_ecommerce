@@ -1,6 +1,6 @@
 sealed class AppException implements Exception {
-  AppException(this.code, this.message);
-  final String code;
+  AppException(this.statusCode, this.message);
+  final String statusCode;
   final String message;
 
   @override
@@ -9,7 +9,7 @@ sealed class AppException implements Exception {
 
 class ServerException extends AppException {
   ServerException({
-    required String code,
+    required String statusCode,
     required String message,
-  }) : super(code, message);
+  }) : super(statusCode, message);
 }

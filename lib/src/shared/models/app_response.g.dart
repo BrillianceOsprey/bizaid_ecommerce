@@ -11,7 +11,8 @@ AppResponse<T> _$AppResponseFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) =>
     AppResponse<T>(
-      success: json['success'] as String?,
+      status: json['status'] as String,
+      statusCode: json['statusCode'] as int,
       message: json['message'] as String,
       errors: (json['errors'] as List<dynamic>?)
           ?.map((e) => e as Map<String, dynamic>)
@@ -24,7 +25,8 @@ Map<String, dynamic> _$AppResponseToJson<T>(
   Object? Function(T value) toJsonT,
 ) =>
     <String, dynamic>{
-      'success': instance.success,
+      'status': instance.status,
+      'statusCode': instance.statusCode,
       'message': instance.message,
       'errors': instance.errors,
       'data': _$nullableGenericToJson(instance.data, toJsonT),
