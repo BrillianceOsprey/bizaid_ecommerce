@@ -6,18 +6,15 @@ part 'product_detail_controller.g.dart';
 
 @riverpod
 class ProductDetailController extends _$ProductDetailController {
-  Future<List<Product>> _fetchData() async {
-    // final repository = ref.read(productsRepositoryProvider);
-    // final result = await repository.getAllProducts();
+  Future<List<Product>> _fetchData(String erpCode) async {
+    final repository = ref.read(productsRepositoryProvider);
 
-    // print(result.data?.meta?.currentPage.toString());
-
-    // return result.data?.data ?? [];
-    return [];
+    final result = await repository.getRelatedProduct(erpCode);
+    return result.data;
   }
 
   @override
-  FutureOr<List<Product>> build() {
-    return _fetchData();
+  FutureOr<List<Product>> build(String erpCode) {
+    return _fetchData(erpCode);
   }
 }

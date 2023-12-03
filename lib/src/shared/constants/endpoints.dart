@@ -23,4 +23,10 @@ class Endpoints {
       '$_apiPrefix$_productDivision/product-groups';
 
   static const String thirdCategory = _baseThirdCategory;
+
+  // product related
+  static const String productRelated = '$_apiPrefix/products/related-product/';
+
+  // carts
+  static const String carts = '$_apiPrefix/carts';
 }

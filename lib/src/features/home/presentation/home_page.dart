@@ -3,7 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:starter_app/src/features/category/presentation/category_controller.dart';
 import 'package:starter_app/src/features/category/presentation/category_page.dart';
 import 'package:starter_app/src/features/home/presentation/product_list/product_list_controller.dart';
+import 'package:starter_app/src/features/home/presentation/widgets/first_cat_placeholder.dart';
 import 'package:starter_app/src/features/home/presentation/widgets/home_product_grid_view.dart';
+import 'package:starter_app/src/features/home/presentation/widgets/second_cat_placeholder.dart';
 import 'package:starter_app/src/shared/pagination/use_pagination.dart';
 import 'package:starter_app/src/shared/utils/async/async_value_ui.dart';
 import 'package:starter_app/src/shared/utils/flutter_extension.dart';
@@ -18,10 +20,9 @@ class HomePage extends StatefulHookConsumerWidget {
 }
 
 class HomePageState extends ConsumerState<HomePage> {
-  bool isShowSecondCategory = false;
-
   @override
   Widget build(BuildContext context) {
+    // get first category
     ref.listen(firstCategoryListProvider, (_, state) {
       state.showAlertDialogOnError(context);
       ref.read(selectedFirstCategoryTitleProvider.notifier).state =
@@ -29,8 +30,9 @@ class HomePageState extends ConsumerState<HomePage> {
     });
 
     final firstCategorystate = ref.watch(firstCategoryListProvider);
+    // watch second category from repository
     final secondCatState = ref.watch(secondCategoryListProvider);
-
+    // pagination controller for home page product
     final controller = ref.watch(paginatedProductControllerProvider.notifier);
     final scrollController = usePagination(
       controller.loadMore,
@@ -45,9 +47,12 @@ class HomePageState extends ConsumerState<HomePage> {
       body: ListView(
         controller: scrollController,
         children: [
-          Text(
-            'First Category',
-            style: Theme.of(context).textTheme.titleLarge,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              'First Category',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
 
           SizedBox(
@@ -59,9 +64,6 @@ class HomePageState extends ConsumerState<HomePage> {
                     itemCount: data.length,
                     itemBuilder: (context, index) => InkWell(
                       onTap: () {
-                        // setState(() {
-                        //   isShowSecondCategory = !isShowSecondCategory;
-                        // });
                         ref
                             .read(selectedFirstCategoryTitleProvider.notifier)
                             .state = data[index].divisionName ?? '';
@@ -88,7 +90,7 @@ class HomePageState extends ConsumerState<HomePage> {
                 AsyncLoading() => const Center(
                     child: CircularProgressIndicator(),
                   ),
-                _ => const SizedBox(),
+                _ => const FirstCatPlaceHolder(),
               }),
 
           // second category list
@@ -97,12 +99,15 @@ class HomePageState extends ConsumerState<HomePage> {
             AsyncData(:final value) when value.isNotEmpty => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    ref.watch(selectedFirstCategoryTitleProvider),
-                    style: Theme.of(context).textTheme.titleLarge,
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: Text(
+                      ref.watch(selectedFirstCategoryTitleProvider),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
                   SizedBox(
-                    // height: MediaQuery.of(context).size.height * 0.14,
                     height: 100,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
@@ -110,7 +115,6 @@ class HomePageState extends ConsumerState<HomePage> {
                       itemBuilder: (context, index) => InkWell(
                         onTap: () {
                           Navigator.of(context).push(
-                            // ignore: inference_failure_on_instance_creation
                             MaterialPageRoute(
                               builder: (context) => CategoryPage(
                                 value[index].itemCategoryId,
@@ -124,42 +128,31 @@ class HomePageState extends ConsumerState<HomePage> {
                           ),
                           child: Column(
                             children: [
-                              // CachedNetworkImage(
-                              //   height: 70,
-                              //   width: 70,
-                              //   imageUrl:
-                              //       'http://13.228.29.1/productAllImage/HHPSA006.jpg',
-                              //   imageBuilder: (context, imageProvider) =>
-                              //       Container(
-                              //     decoration: BoxDecoration(
-                              //       image: DecorationImage(
-                              //         image: imageProvider,
-                              //         fit: BoxFit.cover,
-                              //         colorFilter: const ColorFilter.mode(
-                              //           Colors.red,
-                              //           BlendMode.colorBurn,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              //   placeholder: (context, url) =>
-                              //       const CircularProgressIndicator(),
-                              //   errorWidget: (context, url, error) =>
-                              //       const Icon(Icons.error),
-                              // ),
-                              Container(
-                                height: 70,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                      value[index].imageUrl ?? '',
+                              value[index].imageUrl == null
+                                  ? SizedBox(
+                                      height: 70,
+                                      width: 70,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.broken_image,
+                                          size: 80,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 70,
+                                      width: 70,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            value[index].imageUrl ?? '',
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
                               Text(value[index].itemCategoryName ?? ''),
                             ],
                           ),
@@ -169,8 +162,10 @@ class HomePageState extends ConsumerState<HomePage> {
                   ),
                 ],
               ),
-            AsyncLoading() => const Center(child: CircularProgressIndicator()),
-            _ => const Text('No data'),
+            AsyncLoading() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            _ => const SecondCatPlaceHolder(),
           },
 
           const Padding(

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:starter_app/src/features/category/data/category_repository.dart';
-import 'package:starter_app/src/features/category/domain/first_level_category.dart';
 import 'package:starter_app/src/features/category/presentation/category_controller.dart';
-import 'package:starter_app/src/shared/utils/logger/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CategoryPage extends StatefulHookConsumerWidget {

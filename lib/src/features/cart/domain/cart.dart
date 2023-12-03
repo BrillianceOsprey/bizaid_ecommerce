@@ -22,8 +22,9 @@ class Cart extends Equatable {
   final int quantity;
   final String? variantId;
   final Product product;
-  final String? variant;
+  final Variant? variant;
 
+  factory Cart.fromJson(Map<String, dynamic> json) => _$CartFromJson(json);
   @override
   List<Object?> get props => [id];
 
@@ -36,7 +37,7 @@ class Cart extends Equatable {
     int? quantity,
     String? variantId,
     Product? product,
-    String? variant,
+    Variant? variant,
   }) {
     return Cart(
       id ?? this.id,
