@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:starter_app/src/shared/utils/dio_client/app_interceptor.dart';
 
-import 'package:starter_app/src/env/env.dart';
+// import 'package:starter_app/src/env/env.dart';
 
 part 'dio_client.g.dart';
 
@@ -19,15 +20,18 @@ class DioClient {
   Dio get instance => _dio;
 
   Dio createDioClient() {
-    final baseUrl = Env.apiUrl;
+    // final baseUrl = Env.apiUrl;
     final dio = Dio()
       ..options = BaseOptions(
-        baseUrl: baseUrl,
+        baseUrl: 'http://13.228.29.1',
         headers: {
           Headers.acceptHeader: Headers.jsonContentType,
           Headers.contentTypeHeader: Headers.jsonContentType,
         },
-      );
+      )
+      ..interceptors.addAll([
+        DioAppInterceptor(),
+      ]);
 
     return dio;
   }

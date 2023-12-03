@@ -1,8 +1,11 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:starter_app/src/features/product/presentation/product_detail_controller.dart';
 import 'package:starter_app/src/shared/constants/app_size.dart';
 
 @RoutePage()
@@ -35,6 +38,42 @@ class _ProductDatailPageState extends ConsumerState<ProductDatailPage> {
   ];
   @override
   Widget build(BuildContext context) {
+    ref.listen(productDetailControllerProvider, (previous, next) {
+      next.when(
+        data: (data) {
+          log(data.toString());
+        },
+        error: (_, __) {
+          log(_.toString());
+        },
+        loading: () {},
+      );
+    });
+
+    final state = ref.watch(productDetailControllerProvider);
+
+    return Scaffold(
+      body: switch (state) {
+        AsyncData(:final value) when value.isNotEmpty => ListView.builder(
+            itemBuilder: (ctx, idx) {
+              final item = value[idx];
+
+              return ListTile(
+                title: Text(item.productCode),
+                subtitle: Text(item.productName),
+              );
+            },
+          ),
+        AsyncError(:final error, stackTrace: var _) => Center(
+            child: Text(error.toString()),
+          ),
+        AsyncLoading() => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        _ => const Text('No data'),
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Detail'),

@@ -9,10 +9,13 @@ class Product extends Equatable {
   final String productCode;
   final String erpCode;
   final String productName;
-  final String price;
+  final int price;
+  @JsonKey(defaultValue: '')
   final String imageUrl;
+
   @JsonKey(name: 'variants', defaultValue: [])
-  final List<String> variants;
+  final List<Variant> variants;
+
   const Product({
     required this.productCode,
     required this.erpCode,
@@ -21,15 +24,17 @@ class Product extends Equatable {
     required this.imageUrl,
     required this.variants,
   });
+
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
+
   Product copyWith({
     String? productCode,
     String? erpCode,
     String? productName,
-    String? price,
+    int? price,
     String? imageUrl,
-    List<String>? variants,
+    List<Variant>? variants,
   }) {
     return Product(
       productCode: productCode ?? this.productCode,
@@ -50,3 +55,23 @@ class Product extends Equatable {
 //   "price": 3800,
 //   "imageUrl": null,
 //   "variants": []
+
+@JsonSerializable()
+class Variant extends Equatable {
+  const Variant({required this.code, required this.imageUrl});
+
+  factory Variant.fromJson(Map<String, dynamic> json) =>
+      _$VariantFromJson(json);
+
+  @JsonKey(name: 'variantCode', defaultValue: '')
+  final String code;
+
+  @JsonKey(name: 'imageUrl', defaultValue: '')
+  final String imageUrl;
+
+  @override
+  List<Object?> get props => [code, imageUrl];
+
+  @override
+  bool? get stringify => true;
+}

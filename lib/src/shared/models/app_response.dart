@@ -7,32 +7,34 @@ part 'app_response.g.dart';
 
 @JsonSerializable(explicitToJson: true, genericArgumentFactories: true)
 class AppResponse<T> extends Equatable {
+  const AppResponse._({
+    this.status,
+    this.message,
+    this.statusCode,
+    this.error,
+    required this.statusMessage,
+    this.data,
+  });
+
   factory AppResponse({
-    required String status,
-    required int statusCode,
-    required String message,
-    List<Map<String, dynamic>>? errors,
+    String? status,
+    int? statusCode,
+    List<String>? message,
+    String? error,
+    String? statusMessage,
     T? data,
   }) =>
       AppResponse._(
         status: status,
-        statusCode: statusCode,
         message: message,
-        errors: errors,
+        statusCode: statusCode ?? 200,
+        error: error,
+        statusMessage: statusMessage ?? 'The request has succeeded.',
         data: data,
       );
-  const AppResponse._({
-    required this.status,
-    required this.statusCode,
-    required this.message,
-    this.errors,
-    this.data,
-  });
 
   factory AppResponse.fromJson(
-    Map<String, dynamic> json,
-    T Function(Object? json) fromJsonT,
-  ) =>
+          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
       _$AppResponseFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(
@@ -40,14 +42,16 @@ class AppResponse<T> extends Equatable {
   ) =>
       _$AppResponseToJson(this, toJsonT);
 
-  final String status;
+  final String? status;
+  final int? statusCode;
+  final List<String>? message;
+  final String? error;
 
-  final int statusCode;
-  final String message;
-
-  final List<Map<String, dynamic>>? errors;
-
+  /// The [AppResponse] data
   final T? data;
+
+  /// `statusMessage` added by http response (Not from server)
+  final String statusMessage;
 
   @override
   List<Object?> get props => [status, message, data ?? ''];
@@ -81,17 +85,12 @@ Future<AppResponse<List<T>>> computeAppResponseList<T>(
 extension AppResponseX<T> on AppResponse<T> {
   /// Extension function to throw exception if error occurred.
   AppResponse<T> throwIfError() {
-    if (status == 'success') {
+    if (error == null) {
       return this;
-    } else if (errors != null && errors!.isNotEmpty) {
-      throw ServerException(
-        statusCode: statusCode.toString(),
-        message: errors!.map((e) => '${e['msg']}').toList().join('\n'),
-      );
     } else {
       throw ServerException(
         statusCode: statusCode.toString(),
-        message: message,
+        message: error!,
       );
     }
   }

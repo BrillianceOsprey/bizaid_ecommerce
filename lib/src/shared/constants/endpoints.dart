@@ -8,6 +8,19 @@ class Endpoints {
 
   // cateogry
   // first category
-  static const String _baseCategory = '$_apiPrefix$_productDivision';
-  static const String firstCategory = _baseCategory;
+  static const String _baseFirstCategory = '$_apiPrefix$_productDivision';
+  static const String firstCategory = _baseFirstCategory;
+
+  // second category
+  static const String _baseSecondCategory =
+      '$_apiPrefix$_productDivision/item-categories';
+
+  static const String secondCategory = _baseSecondCategory;
+
+  // third caetgory
+
+  static const String _baseThirdCategory =
+      '$_apiPrefix$_productDivision/product-groups';
+
+  static const String thirdCategory = _baseThirdCategory;
 }

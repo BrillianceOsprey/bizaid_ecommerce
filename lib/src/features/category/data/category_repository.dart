@@ -14,7 +14,7 @@ class CategoryRepository {
 
   final Dio _client;
 
-  Future<AppResponse<List<FirstCategory>>> getAllProducts() async {
+  Future<AppResponse<List<FirstCategory>>> getFirstCategory() async {
     final response = await _client.get(Endpoints.firstCategory);
     print(response.data);
 
@@ -23,6 +23,39 @@ class CategoryRepository {
       FirstCategory.fromJson,
     );
     return result.throwIfError();
+  }
+
+  Future<List<SecondLevelCategory>> getSecondCategory(String divisionId) async {
+    final response = await _client.get(
+      Endpoints.secondCategory,
+      queryParameters: {
+        'divisionId': divisionId,
+      },
+    );
+
+    final result = await computeAppResponseList(
+      response.data,
+      SecondLevelCategory.fromJson,
+    );
+    final categories = result.throwIfError().data ?? [];
+    return categories;
+  }
+
+  Future<List<ThirdLevelCategory>> getThirdCategory(
+      String itemCategoryId) async {
+    final response = await _client.get(
+      Endpoints.thirdCategory,
+      queryParameters: {
+        'itmCategoryId': itemCategoryId,
+      },
+    );
+    logger.f(response.realUri);
+    final result = await computeAppResponseList(
+      response.data,
+      ThirdLevelCategory.fromJson,
+    );
+    final categories = result.throwIfError().data ?? [];
+    return categories;
   }
 }
 
