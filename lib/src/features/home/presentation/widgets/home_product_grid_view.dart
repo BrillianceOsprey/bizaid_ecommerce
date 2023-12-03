@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:starter_app/src/features/cart/data/cart_repository.dart';
 import 'package:starter_app/src/features/home/presentation/product_list/product_list_controller.dart';
 import 'package:starter_app/src/features/product/presentation/product_detail_page.dart';
 import 'package:starter_app/src/shared/utils/extensions/media_query_extension.dart';
+import 'package:starter_app/src/shared/utils/flutter_extension.dart';
+import 'package:starter_app/src/shared/widgets/alert_dialogs.dart';
 
 class HomeProductGridView extends StatefulHookConsumerWidget {
   const HomeProductGridView({
@@ -102,13 +105,11 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
                         borderRadius: borderRadius,
                       ),
                       child: Container(
-                        // width: context.screenWidth * 0.3,
                         height: context.screenHeight * 0.15,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           image: DecorationImage(
                             image: NetworkImage(
-                              // 'http://13.228.29.1/productAllImage/SHATDX003.jpg',
                               product.imageUrl,
                             ),
                             fit: BoxFit.cover,
@@ -127,8 +128,31 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
                                 ),
                       ),
                       IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.favorite_outline),
+                        onPressed: () async {
+                          await ref
+                              .read(cartRepositoryProvider)
+                              .addToCart(
+                                productCode: product.productCode,
+                                quantity: 10,
+                              )
+                              .then(
+                                (value) => showAlertDialog(
+                                    context: context,
+                                    title: 'Success',
+                                    content:
+                                        'You added "${product.productName}" to you cart.'),
+                              );
+                        },
+                        icon: Card(
+                          color: context.colorScheme.secondaryContainer,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: Icon(Icons.shopping_cart),
+                          ),
+                        ),
                       ),
                     ],
                   ),

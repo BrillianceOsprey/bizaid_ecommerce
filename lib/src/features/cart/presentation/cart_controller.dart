@@ -16,3 +16,17 @@ class CartController extends _$CartController {
     return _fetchCartsList();
   }
 }
+
+// @riverpod
+// class AddToCartController extends _$AddToCartController {
+//   Future<List<Cart>> _addToCart() async {
+//     final repository = ref.read(cartRepositoryProvider);
+//     final result = await repository.addToCart();
+//     return result.data ?? [];
+//   }
+
+//   @override
+//   FutureOr<List<Cart>> build() {
+//     return _addToCart();
+//   }
+// }

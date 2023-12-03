@@ -4,6 +4,7 @@ import 'package:starter_app/src/features/cart/domain/cart.dart';
 import 'package:starter_app/src/shared/constants/endpoints.dart';
 import 'package:starter_app/src/shared/models/app_response.dart';
 import 'package:starter_app/src/shared/utils/dio_client/dio_client.dart';
+import 'package:starter_app/src/shared/utils/logger/logger.dart';
 part 'cart_repository.g.dart';
 
 class CartRepository {
@@ -31,6 +32,30 @@ class CartRepository {
       Cart.fromJson,
     );
     return result.throwIfError();
+  }
+
+  Future<String> addToCart({
+    required String productCode,
+    required int quantity,
+  }) async {
+    Map<String, dynamic> headers = {
+      'Content-Type': 'application/json',
+      'x-temp-user-id': '324432432',
+    };
+    final response = await _client.post(
+      Endpoints.carts,
+      options: Options(
+        headers: headers,
+      ),
+      data: {
+        'productCode': productCode,
+        'quantity': quantity,
+      },
+    );
+    logger.t(response);
+    logger.t(response.statusMessage);
+    final result = response.statusMessage;
+    return result ?? '';
   }
 }
 

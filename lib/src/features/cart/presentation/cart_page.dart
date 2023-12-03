@@ -22,16 +22,19 @@ class CartPageState extends ConsumerState<CartPage> {
       logger.t(state.value!.first.productCode);
     });
     final cartListState = ref.watch(cartControllerProvider);
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: context.colorScheme.inversePrimary,
-          title: const Text('Cart(5)'),
+          title: Text(
+            'Counts: ${cartListState.value?.length.toString() ?? ''}',
+          ),
           actions: const [
             Icon(Icons.shopping_cart),
             SizedBox(
               width: 12,
             ),
-            Icon(Icons.message),
+            Icon(Icons.delete),
             SizedBox(
               width: 16,
             ),
@@ -46,44 +49,45 @@ class CartPageState extends ConsumerState<CartPage> {
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).push(
-                      // ignore: inference_failure_on_instance_creation
                       MaterialPageRoute(
-                        builder: (context) => const CartDetailPage(),
+                        builder: (context) => CartDetailPage(
+                          cart: value[index],
+                        ),
                       ),
                     );
                   },
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: SizedBox(
+                    child: Card(
                       child: Row(
                         children: [
-                          Container(
-                            height: 16,
-                            width: 16,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: context.colorScheme.onBackground,
-                              ),
-                              color: context.colorScheme.background,
-                            ),
-                          ),
-                          gapW12,
-                          Container(
-                            // width: context.screenWidth * 0.3,
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                    // 'http://13.228.29.1/productAllImage/SHATDX003.jpg',
-                                    value[index].product.imageUrl),
-                                fit: BoxFit.cover,
+                          if (value[index].product.imageUrl.isEmpty)
+                            SizedBox(
+                              height: 100,
+                              width: 100,
+                              child: Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  size: 100,
+                                  color: Colors.grey.shade500,
+                                ),
                               ),
                             ),
-                          ),
+                          if (value[index].product.imageUrl.isNotEmpty)
+                            Container(
+                              height: 100,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    value[index].product.imageUrl,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           gapW12,
                           Expanded(
                             child: Column(
@@ -91,13 +95,13 @@ class CartPageState extends ConsumerState<CartPage> {
                               children: [
                                 // title
                                 Text(
-                                  'Name of product',
+                                  value[index].product.productName,
                                   overflow: TextOverflow.ellipsis,
-                                  style: context.textTheme.bodyMedium,
+                                  style: context.textTheme.titleMedium,
                                 ),
                                 Text(
-                                  'Qty: 10',
-                                  style: context.textTheme.bodySmall!.copyWith(
+                                  value[index].quantity.toString(),
+                                  style: context.textTheme.titleSmall!.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -105,41 +109,10 @@ class CartPageState extends ConsumerState<CartPage> {
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    const Text('MMK 12000'),
-                                    const Spacer(),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 30,
-                                          width: 30,
-                                          color: context.colorScheme.background,
-                                          child:
-                                              const Icon(Icons.delete_outline),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 2,
-                                          ),
-                                          child: Container(
-                                            height: 30,
-                                            width: 30,
-                                            color:
-                                                context.colorScheme.background,
-                                            child: const Center(
-                                              child: Text('1'),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 30,
-                                          width: 30,
-                                          color: context.colorScheme.background,
-                                          child: const Icon(Icons.add),
-                                        ),
-                                      ],
+                                    Text(
+                                      '${value[index].product.price.toString()} MMK',
                                     ),
+                                    const Spacer(),
                                   ],
                                 ),
                               ],
