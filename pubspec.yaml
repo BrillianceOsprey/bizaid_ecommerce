@@ -32,7 +32,7 @@ dependencies:
   json_annotation: ^4.8.1
   dio: ^5.4.0
   cached_network_image: ^3.3.0
-
+  freezed_annotation: ^2.4.1
 
 
 
@@ -46,6 +46,7 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   import_sorter: ^4.6.0
   build_runner: ^2.4.6
+  freezed: ^2.4.3
   envied_generator: ^0.3.0+3
   custom_lint: ^0.5.4
   riverpod_generator: ^2.3.3
@@ -61,8 +62,7 @@ flutter:
   uses-material-design: true
   # generate: true
 
-  assets:
-    - assets/images/
+  assets: 
     - assets/translations/
     - assets/lotties/
 

@@ -4,6 +4,7 @@ import 'package:starter_app/src/features/app/presentation/views/skeleton_page.da
 import 'package:starter_app/src/features/cart/data/cart_repository.dart';
 import 'package:starter_app/src/features/cart/domain/cart.dart';
 import 'package:starter_app/src/features/cart/presentation/cart_page.dart';
+import 'package:starter_app/src/features/cart/provider/cart_provider.dart';
 import 'package:starter_app/src/shared/constants/app_size.dart';
 import 'package:starter_app/src/shared/utils/extensions/media_query_extension.dart';
 import 'package:starter_app/src/shared/widgets/alert_dialogs.dart';
@@ -103,43 +104,70 @@ class _CartDetailPageState extends ConsumerState<CartDetailPage> {
                 ),
                 gapH16,
                 Expanded(
-                  child: ElevatedButton(
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                           showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog.adaptive(
+                                      title: const Text('Updated'),
+                                      content: const Text(
+                                        'You successfully updated quantity',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () async{
+                                             await ref.read(cartNotifierProvider.notifier).updateCartData( widget.cart,int.parse(quantityController.text) ).then((value) {
+                                              Navigator.of(context). pop();
+                                             Navigator.of(context). pop();
+                      
+                                             });
+                                               
+                                          },
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                           
+                        },
+                        child: const Text('Update Quantity'),
+                      ),
+
+                      ElevatedButton(
                     onPressed: () async {
-                      await ref
-                          .read(cartRepositoryProvider)
-                          .addToCart(
-                            productCode: widget.cart.productCode,
-                            quantity: int.parse(quantityController.text),
-                          )
-                          .then(
-                            (value) => showDialog(
+                       showDialog(
                               context: context,
                               builder: (context) {
                                 return AlertDialog.adaptive(
-                                  title: const Text('Updated'),
+                                  title: const Text('Delete'),
                                   content: const Text(
-                                    'You successfully updated quantity',
+                                    'You deleted successfully',
                                   ),
                                   actions: [
                                     TextButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return const SkeletonPage();
-                                            },
-                                          ),
-                                        );
+                                      onPressed: () async{
+                                         await ref.read(cartNotifierProvider.notifier).deleteCartData( widget.cart ).then((value) {
+                                          Navigator.of(context). pop();
+                                         Navigator.of(context). pop();
+
+                                         });
+                                           
                                       },
                                       child: const Text('Ok'),
                                     ),
                                   ],
                                 );
                               },
-                            ),
-                          );
+                            );
+                       
                     },
-                    child: const Text('Update Quantity'),
+                    child: const Text('Delete'),
+                  ),
+                    ],
                   ),
                 ),
               ],

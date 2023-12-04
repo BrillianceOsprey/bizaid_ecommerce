@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:starter_app/src/features/cart/data/cart_repository.dart';
+import 'package:starter_app/src/features/cart/domain/cart.dart';
+import 'package:starter_app/src/features/cart/provider/cart_provider.dart';
 import 'package:starter_app/src/features/home/presentation/product_list/product_list_controller.dart';
 import 'package:starter_app/src/features/product/presentation/product_detail_page.dart';
 import 'package:starter_app/src/shared/utils/extensions/media_query_extension.dart';
@@ -18,6 +20,13 @@ class HomeProductGridView extends StatefulHookConsumerWidget {
 }
 
 class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
+
+  @override
+  void initState() { 
+    super.initState();
+    ref.read(cartNotifierProvider.notifier).getCartData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(paginatedProductControllerProvider.notifier);
@@ -129,19 +138,16 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
                       ),
                       IconButton(
                         onPressed: () async {
-                          await ref
-                              .read(cartRepositoryProvider)
-                              .addToCart(
-                                productCode: product.productCode,
-                                quantity: 10,
-                              )
-                              .then(
+                          await ref.read(cartNotifierProvider.notifier).addCartData(cartData: 
+                          Cart(1, product.productCode, 1, 'v1', product, null))
+                           .then(
                                 (value) => showAlertDialog(
                                     context: context,
                                     title: 'Success',
                                     content:
                                         'You added "${product.productName}" to you cart.'),
                               );
+                           
                         },
                         icon: Card(
                           color: context.colorScheme.secondaryContainer,

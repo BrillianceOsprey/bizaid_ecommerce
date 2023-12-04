@@ -24,8 +24,7 @@ class CartRepository {
       options: Options(
         headers: headers,
       ),
-    );
-    print(response.data);
+    ); 
 
     final result = await computeAppResponseList(
       response.data,
@@ -57,6 +56,26 @@ class CartRepository {
     final result = response.statusMessage;
     return result ?? '';
   }
+  Future<String> deleteCart({
+    required String productCode, 
+  }) async {
+    Map<String, dynamic> headers = {
+      'Content-Type': 'application/json',
+      'x-temp-user-id': '324432432',
+    };
+    final response = await _client.delete(
+      '${Endpoints.carts}/$productCode',
+      options: Options(
+        headers: headers,
+      ),
+     
+    );
+    logger.t(response);
+    logger.t(response.statusMessage);
+    final result = response.statusMessage;
+    return result ?? '';
+  }
+
 }
 
 @riverpod
