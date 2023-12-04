@@ -1,40 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:starter_app/src/features/cart/domain/cart.dart';
-import 'package:starter_app/src/features/cart/provider/cart_provider.dart';
-import 'package:starter_app/src/features/home/presentation/product_list/product_list_controller.dart';
+import 'package:starter_app/src/features/product/presentation/product_detail_controller.dart';
 import 'package:starter_app/src/features/product/presentation/product_detail_page.dart';
 import 'package:starter_app/src/shared/utils/extensions/media_query_extension.dart';
-import 'package:starter_app/src/shared/utils/flutter_extension.dart';
-import 'package:starter_app/src/shared/widgets/alert_dialogs.dart';
 
-class HomeProductGridView extends StatefulHookConsumerWidget {
-  const HomeProductGridView({
+class ProductRelatedList extends StatefulHookConsumerWidget {
+  final String erpCode;
+  const ProductRelatedList(
+    this.erpCode, {
     super.key,
   });
 
   @override
-  ConsumerState<HomeProductGridView> createState() =>
-      _HomeProductGridViewState();
+  ConsumerState<ProductRelatedList> createState() => _ProductRelatedListState();
 }
 
-class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
-  @override
-  void initState() {
-    super.initState();
-    ref.read(cartNotifierProvider.notifier).getCartData();
-  }
-
+class _ProductRelatedListState extends ConsumerState<ProductRelatedList> {
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(paginatedProductControllerProvider.notifier);
-
-    final state = ref.watch(paginatedProductControllerProvider);
-
-    const borderRadius = BorderRadius.all(Radius.circular(10));
-
-    return switch (state) {
-      AsyncData(:final value) when value.data.isNotEmpty => GridView.builder(
+    final state =
+        ref.watch(productDetailControllerProvider(widget.erpCode.toString()));
+    return SizedBox(
+        child: switch (state) {
+      AsyncData(:final value) when value.isNotEmpty => GridView.builder(
+          // controller: scrollController,
           shrinkWrap: true,
           primary: false,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -43,33 +32,30 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
             mainAxisSpacing: 10,
             childAspectRatio: 0.7,
           ),
-          itemCount: value.data.length +
-              (state.isLoading || state.hasError || !controller.canLoadMore()
-                  ? 1
-                  : 0),
+          itemCount: value.length,
           itemBuilder: (context, index) {
-            if (value.data.length == index) {
-              // here we will handle isLoading and hasError and done
-              if (state.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
+            // if (value.length == index) {
+            //   // here we will handle isLoading and hasError and done
+            //   if (state.isLoading) {
+            //     return const Center(
+            //       child: CircularProgressIndicator.adaptive(),
+            //     );
+            //   }
 
-              if (state.hasError) {
-                return Center(
-                  child: Text(
-                    state.error.toString(),
-                  ),
-                );
-              }
+            //   if (state.hasError) {
+            //     return Center(
+            //       child: Text(
+            //         state.error.toString(),
+            //       ),
+            //     );
+            //   }
 
-              if (!controller.canLoadMore()) {
-                return const Center(child: Text('No more data'));
-              }
-            }
+            //   if (!controller.canLoadMore()) {
+            //     return const Center(child: Text('No more data'));
+            //   }
+            // }
 
-            final product = value.data[index];
+            final product = value[index];
 
             return InkWell(
               onTap: () {
@@ -92,7 +78,9 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
                     Container(
                       decoration: const BoxDecoration(
                         color: Color(0xFFD9D9D9),
-                        borderRadius: borderRadius,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
                       ),
                       child: SizedBox(
                         height: context.screenHeight * 0.15,
@@ -109,14 +97,18 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
                     Container(
                       decoration: const BoxDecoration(
                         color: Color(0xFFD9D9D9),
-                        borderRadius: borderRadius,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
                       ),
                       child: Container(
+                        // width: context.screenWidth * 0.3,
                         height: context.screenHeight * 0.15,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           image: DecorationImage(
                             image: NetworkImage(
+                              // 'http://13.228.29.1/productAllImage/SHATDX003.jpg',
                               product.imageUrl,
                             ),
                             fit: BoxFit.cover,
@@ -135,30 +127,8 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
                                 ),
                       ),
                       IconButton(
-                        onPressed: () async {
-                          await ref
-                              .read(cartNotifierProvider.notifier)
-                              .addCartData(
-                                  cartData: Cart(1, product.productCode, 1,
-                                      'v1', product, null))
-                              .then(
-                                (value) => showAlertDialog(
-                                    context: context,
-                                    title: 'Success',
-                                    content:
-                                        'You added "${product.productName}" to you cart.'),
-                              );
-                        },
-                        icon: Card(
-                          color: context.colorScheme.secondaryContainer,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(2.0),
-                            child: Icon(Icons.shopping_cart),
-                          ),
-                        ),
+                        onPressed: () {},
+                        icon: const Icon(Icons.favorite_outline),
                       ),
                     ],
                   ),
@@ -182,23 +152,47 @@ class _HomeProductGridViewState extends ConsumerState<HomeProductGridView> {
                       ),
                     ],
                   ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   crossAxisAlignment: CrossAxisAlignment.end,
+                  //   children: [
+                  //     Text(
+                  //       'Only 10 items left',
+                  //       style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                  //             fontWeight: FontWeight.bold,
+                  //           ),
+                  //     ),
+                  //     GestureDetector(
+                  //       onTap: () {},
+                  //       child: Container(
+                  //         margin: const EdgeInsets.only(
+                  //           top: 8,
+                  //           right: 8,
+                  //         ),
+                  //         decoration: BoxDecoration(
+                  //           color:
+                  //               context.colorScheme.onBackground.withOpacity(0.1),
+                  //           borderRadius: BorderRadius.circular(4),
+                  //         ),
+                  //         child: const Padding(
+                  //           padding: EdgeInsets.all(2.0),
+                  //           child: Icon(
+                  //             Icons.shopping_cart_outlined,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             );
           },
         ),
       AsyncLoading() => const Center(child: CircularProgressIndicator()),
-      AsyncError(:final error, stackTrace: var _) => Center(
-          child: SizedBox(
-            height: 200,
-            child: Center(
-              child: Text(
-                error.toString(),
-              ),
-            ),
-          ),
-        ),
+      AsyncError(:final error, stackTrace: var _) =>
+        Center(child: Text(error.toString())),
       _ => const SizedBox(),
-    };
+    });
   }
 }

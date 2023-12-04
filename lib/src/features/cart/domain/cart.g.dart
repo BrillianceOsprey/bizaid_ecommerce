@@ -12,7 +12,9 @@ Cart _$CartFromJson(Map<String, dynamic> json) => Cart(
       json['quantity'] as int,
       json['variantId'] as String?,
       Product.fromJson(json['product'] as Map<String, dynamic>),
-      json['variant'] as String?,
+      json['variant'] == null
+          ? null
+          : Variant.fromJson(json['variant'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CartToJson(Cart instance) => <String, dynamic>{

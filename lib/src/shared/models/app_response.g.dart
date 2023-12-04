@@ -11,11 +11,12 @@ AppResponse<T> _$AppResponseFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) =>
     AppResponse<T>(
-      success: json['success'] as String?,
-      message: json['message'] as String,
-      errors: (json['errors'] as List<dynamic>?)
-          ?.map((e) => e as Map<String, dynamic>)
-          .toList(),
+      status: json['status'] as String?,
+      statusCode: json['statusCode'] as int?,
+      message:
+          (json['message'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      error: json['error'] as String?,
+      statusMessage: json['statusMessage'] as String?,
       data: _$nullableGenericFromJson(json['data'], fromJsonT),
     );
 
@@ -24,10 +25,12 @@ Map<String, dynamic> _$AppResponseToJson<T>(
   Object? Function(T value) toJsonT,
 ) =>
     <String, dynamic>{
-      'success': instance.success,
+      'status': instance.status,
+      'statusCode': instance.statusCode,
       'message': instance.message,
-      'errors': instance.errors,
+      'error': instance.error,
       'data': _$nullableGenericToJson(instance.data, toJsonT),
+      'statusMessage': instance.statusMessage,
     };
 
 T? _$nullableGenericFromJson<T>(
